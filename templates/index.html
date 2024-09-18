@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Academy</title>
+    <style>
+        /* Base styles */
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #00264d;
+            color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem; /* Increased space in header */
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            max-width: 1200px; /* Adjust width as needed */
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .navbar-brand {
+            font-size: 1.75rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: #ffcc00;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand .logo-text {
+            margin-left: 0.5rem;
+            color: #ffcc00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar-brand .logo-icon {
+            font-size: 2rem;
+            background-color: #ffcc00;
+            color: #00264d;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+        }
+
+        .navbar-nav {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+            margin-left: 1.5rem; /* Reduced margin for better alignment */
+        }
+
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-link:hover,
+        .nav-link:focus {
+            background-color: #003366;
+            color: #ffcc00;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #003366;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            min-width: 180px;
+            z-index: 1000; /* Ensure dropdown is above other elements */
+        }
+
+        .dropdown-menu .dropdown-item {
+            padding: 0.75rem 1.5rem;
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+            font-weight: 400;
+        }
+
+        .dropdown-menu .dropdown-item:hover {
+            background-color: #004080;
+            color: #ffcc00;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .navbar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.75rem;
+            cursor: pointer;
+            padding: 0;
+            margin-left: auto;
+        }
+
+        .navbar-toggle:focus {
+            outline: none;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .navbar-nav {
+                flex-direction: column;
+                display: none;
+                width: 100%;
+                background-color: #00264d;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                border-top: 1px solid #003366;
+                padding: 0;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .navbar-nav.active {
+                display: flex;
+            }
+
+            .nav-item {
+                margin-left: 0;
+                margin-bottom: 0.5rem;
+                text-align: center;
+            }
+
+            .navbar-toggle {
+                display: block;
+            }
+
+            .dropdown-menu {
+                position: static;
+                box-shadow: none;
+                border-radius: 0;
+            }
+
+            .dropdown:hover .dropdown-menu {
+                display: none; /* Hide dropdown on mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="/" class="navbar-brand">
+                <span class="logo-icon">B</span>
+                <span class="logo-text">Binary Academy</span>
+            </a>
+            <button class="navbar-toggle">☰</button>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                <li class="nav-item dropdown">
+                    <a href="/about" class="nav-link">About Us</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/about/mission" class="dropdown-item">Mission</a></li>
+                        <li><a href="/about/team" class="dropdown-item">Team</a></li>
+                        <li><a href="/about/history" class="dropdown-item">History</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="/campus" class="nav-link">Campus</a></li>
+                <li class="nav-item"><a href="/students" class="nav-link">Students</a></li>
+                <li class="nav-item"><a href="/register" class="nav-link">Register</a></li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link">Login</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/about/mission" class="dropdown-item">Student Login</a></li>
+                        <li><a href="/about/team" class="dropdown-item">Trainer Login</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a href="/contact" class="nav-link">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Content goes here -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navToggle = document.querySelector('.navbar-toggle');
+            const navItems = document.querySelector('.navbar-nav');
+
+            navToggle.addEventListener('click', function () {
+                navItems.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
