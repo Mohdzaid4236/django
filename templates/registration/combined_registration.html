@@ -1,507 +1,686 @@
 <!DOCTYPE html>
+
 <html lang="en">
+{% load static %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Form</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <title>Multi-Step Registration Form</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 20px;
-            color: #333;
-        }
-        main {
-            max-width: 900px;
-            margin: auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #007BFF;
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-        form {
-            margin-bottom: 20px;
-        }
-        fieldset {
-            border: none;
-            margin-bottom: 20px;
-            padding: 0;
-        }
-        legend {
-            font-weight: bold;
-            font-size: 1.2rem;
-            color: #0056b3;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #0056b3;
-        }
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        .form-group label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            color: #333;
-        }
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .form-group textarea {
-            resize: vertical;
-        }
-        .form-group .error {
-            color: #dc3545;
-            font-size: 0.875rem;
-        }
-        button {
-            background-color: #007BFF;
-            color: #fff;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-        }
-        .checkbox-container input[type="checkbox"] {
-            margin-right: 0.5rem;
-        }
-        .form-group .checkbox-label {
-            display: flex;
-            align-items: center;
-        }
-        .employment-section {
-            margin-top: 1.5rem;
-        }
-        .employment-history {
-            margin-top: 1rem;
-        }
-        .employment-history .form-group {
-            margin-bottom: 1rem;
-        }
-        .delete-employment-btn {
-            background-color: #dc3545;
-            border: none;
-            color: #fff;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-        }
-        .delete-employment-btn:hover {
-            background-color: #c82333;
-        }
-        .employment-entry {
-            position: relative;
-            border: 1px solid #ddd;
-            padding: 1rem;
-            border-radius: 4px;
-            margin-bottom: 1rem;
-            background-color: #f9f9f9;
-        }
-    </style>
+    body {
+        font-family: 'Roboto', sans-serif; /* Professional font */
+        margin: 0;
+        padding: 0;
+        background-color: #f4f6f8; /* Light gray background for a clean look */
+    }
+    
+    .header {
+        background-color: #ecf0f1; /* Light gray background for header */
+        color: #2c3e50; /* Dark blue-gray text */
+        display: flex; /* Flexbox for alignment */
+        justify-content: flex-start; /* Align everything to the left */
+        align-items: center; /* Vertically center items */
+        padding: 10px 20px; /* Padding around header */
+        font-size: 28px; /* Font size for header */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    }
+    
+    .header img {
+        margin-right: 20px; /* Space between the logo and text */
+        height: 90px; /* Set the logo height */
+    }
+    
+    .header h1 {
+        margin: 0;
+        flex-grow: 1; /* Make the text take up available space */
+        text-align: left; /* Align the text to the left */
+    }
+    
+    .container {
+        display: flex;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+    
+    .sidebar {
+        width: 220px;
+        padding: 20px;
+        border-right: 1px solid #ddd; /* Light gray border */
+        background-color: #34495e; /* Dark gray-blue for the sidebar */
+        color: white; /* White text for sidebar */
+    }
+    
+    .sidebar:hover {
+        background-color: #2c3e50; /* Darker shade on hover */
+    }
+    
+    .form-container {
+        flex-grow: 1;
+        padding: 20px;
+        background-color: #ffffff; /* White background for the form */
+        border-radius: 8px; /* Rounded corners for the form container */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    }
+    
+    .form-section {
+        display: none; /* Hide all sections by default */
+        margin-bottom: 20px;
+    }
+    
+    .form-section.active {
+        display: block; /* Show the active section */
+    }
+    
+    #progress-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    #progress-list li {
+        cursor: pointer;
+        padding: 15px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd; /* Light gray border */
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s;
+        background-color: rgba(240, 240, 240, 0.5); /* Light background for progress items */
+    }
+    
+    #progress-list li.active {
+        background-color: #2980b9; /* Blue when active */
+        color: white;
+    }
+    
+    label {
+        margin-top: 10px;
+        display: block;
+        color: #333; /* Darker text for labels */
+        font-weight: bold; /* Bold labels for emphasis */
+    }
+    
+    input, select, textarea {
+        width: 100%;
+        padding: 12px;
+        margin-top: 5px;
+        border: 1px solid #ccc; /* Light gray border */
+        border-radius: 5px; /* Rounded corners */
+        box-sizing: border-box; /* Ensures padding does not affect width */
+        transition: border-color 0.3s; /* Smooth transition for border color */
+    }
+    
+    input:focus, select:focus, textarea:focus {
+        border-color: #2980b9; /* Change border color on focus */
+        outline: none; /* Remove default outline */
+    }
+    
+    button {
+        margin-top: 10px;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #27ae60; /* Green background for buttons */
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s; /* Smooth transition for background color */
+    }
+    
+    button:hover {
+        background-color: #219653; /* Darker green on hover */
+    }
+    
+    .form-row {
+        display: flex;
+        gap: 15px; /* Space between form elements */
+    }
+    
+    .form-row > div {
+        flex: 1; /* Allow elements to take up available space */
+    }
+    
+    .employment-entry {
+        margin-bottom: 15px;
+        padding: 10px;
+        border: 1px solid #ccc; /* Light gray border */
+        border-radius: 5px; /* Rounded corners */
+    }
+    
+    .checkbox-group {
+        display: flex;
+        align-items: center; /* Vertically center items in the checkbox group */
+    }
+    
+    .checkbox-group label {
+        margin: 0;
+        padding: 0;
+        align-items: center; /* Vertically center the label */
+    }
+    
+    .checkbox-group input[type="checkbox"] {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .delete-btn {
+        background-color: #e74c3c; /* Red background for delete button */
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px; /* Rounded corners */
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s; /* Smooth transition for background color */
+    }
+    
+    .delete-btn:hover {
+        background-color: #c0392b; /* Darker red on hover */
+    }
+    
+</style>
+    
 </head>
+{% csrf_token %}
 <body>
-    <main>
-        <h1>Registration Form</h1>
-        <form method="post" novalidate>
-            {% csrf_token %}
-
-            <!-- General Errors -->
-            {% if form.non_field_errors %}
-                <div class="form-group error">
-                    {% for error in form.non_field_errors %}
-                        <div class="error">{{ error }}</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            <!-- Personal Information -->
-            <fieldset>
-                <legend>Personal Information</legend>
-                <div class="form-group">
-                    <label for="id_first_name">First Name <span class="required">*</span></label>
-                    <input type="text" id="id_first_name" name="first_name" required {% if form.first_name.value %} value="{{ form.first_name.value }}"{% endif %}>
-                    {% if form.first_name.errors %}
-                        <div class="error">{{ form.first_name.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="id_middle_name">Middle Name</label>
-                    <input type="text" id="id_middle_name" name="middle_name" {% if form.middle_name.value %} value="{{ form.middle_name.value }}"{% endif %}>
-                    {% if form.middle_name.errors %}
-                        <div class="error">{{ form.middle_name.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="id_last_name">Last Name <span class="required">*</span></label>
-                    <input type="text" id="id_last_name" name="last_name" required {% if form.last_name.value %} value="{{ form.last_name.value }}"{% endif %}>
-                    {% if form.last_name.errors %}
-                        <div class="error">{{ form.last_name.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="id_country_code">Country Code <span class="required">*</span></label>
-                    <select id="id_country_code" name="country_code" required>
+    <div class="header">
+        <a href="/">
+            <img src="{% static 'images/Binary Academy Logo 2 (1).png' %}" alt="Binary Academy Logo" width="165" height="250">
+        </a>
+        <h2>Welcome to the Registration Form!</h2> 
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Progress</h2>
+            <ul id="progress-list">
+                <li class="active" data-section="personal-info">Personal Information</li>
+                <li data-section="address-info">Address</li>
+                <li data-section="qualifications-info">Qualifications</li>
+                <li data-section="employment-info">Employment Information</li>
+                <li data-section="visa-info">Visa Information</li>
+            </ul>
+        </div>
+        <div class="form-container">
+            <form id="registration-form" method="POST" action="{% url 'register' %}">
+                {% csrf_token %}
+                
+                <div class="form-section active" id="personal-info">
+                    <h3>Personal Information</h3>
+                    <div class="form-row">
+                        <div>
+                            <label for="first-name">First Name *</label>
+                            <input type="text" id="first-name" name="first_name" required>
+                        </div>
+                        <div>
+                            <label for="middle-name">Middle Name</label>
+                            <input type="text" id="middle-name" name="middle_name">
+                        </div>
+                        <div>
+                            <label for="last-name">Last Name *</label>
+                            <input type="text" id="last-name" name="last_name" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div>
+                            <label for="country-code">Country Code *</label>
+                            <select id="country-code" name="country_code" required>
+                                <option value="">Select an option</option>
+                                <option value="+1">+1</option>
+                                <option value="+44">+44</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                    </div>
+                    <input type="hidden" id="hidden_email" name="hidden_email">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" required value="{{ personal_info_form.email.value }}">
+                    <label for="alternate-email">Alternate Email</label>
+                    <input type="email" id="alternate-email" name="alternate_email">
+                    <label for="how-find-out">How Did You Find Out? *</label>
+                    <select id="how-find-out" name="how_did_you_find_out" required>
                         <option value="">Select an option</option>
-                        <option value="USA">USA(+1)</option>
-                        <option value="CAN">Canada(+1)</option>
-                        <option value="UK">UK(+44)</option>
-                        <option value="AUS">Australia(+61)</option>
+                        <option value="counseller">Academic Counseller</option>
+                        <option value="friend">Friend</option>
+                        <option value="advertisement">Advertisement</option>
                     </select>
-                    {% if form.country_code.errors %}
-                        <div class="error">{{ form.country_code.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="id_phone">Phone Number <span class="required">*</span></label>
-                    <input type="text" id="id_phone" name="phone" required {% if form.phone.value %} value="{{ form.phone.value }}"{% endif %}>
-                    {% if form.phone.errors %}
-                        <div class="error">{{ form.phone.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="id_email">Email <span class="required">*</span></label>
-                    <input type="email" id="id_email" name="email" required {% if form.email.value %} value="{{ form.email.value }}"{% endif %}>
-                    {% if form.email.errors %}
-                        <div class="error">{{ form.email.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="id_alternate_email">Alternate Email</label>
-                    <input type="email" id="id_alternate_email" name="alternate_email" {% if form.alternate_email.value %} value="{{ form.alternate_email.value }}"{% endif %}>
-                    {% if form.alternate_email.errors %}
-                        <div class="error">{{ form.alternate_email.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="id_how_did_you_find_out">How Did You Find Out? <span class="required">*</span></label>
-                    <select id="id_how_did_you_find_out" name="how_did_you_find_out" required>
+                    <label for="relocate">Ready to Relocate? *</label>
+                    <select id="relocate" name="ready_to_relocate" required>
                         <option value="">Select an option</option>
-                        <option value="INTERNET">Internet</option>
-                        <option value="FAMILY_FRIENDS">Family/Friends</option>
-                        <option value="COUNSELLOR">Counsellor</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
                     </select>
-                    {% if form.how_did_you_find_out.errors %}
-                        <div class="error">{{ form.how_did_you_find_out.errors }}</div>
-                    {% endif %}
+                    <button type="button" class="next-btn">Next</button>
                 </div>
-                <div class="form-group">
-                    <label for="id_ready_to_relocate">Ready to Relocate <span class="required">*</span></label>
-                    <select id="id_ready_to_relocate" name="ready_to_relocate" required>
-                        <option value="">Select an option</option>
-                        <option value="True">Yes</option>
-                        <option value="False">No</option>
-                    </select>
-                    {% if form.ready_to_relocate.errors %}
-                        <div class="error">{{ form.ready_to_relocate.errors }}</div>
-                    {% endif %}
-                </div>
-            </fieldset>
 
-            <!-- Address Fields -->
-            <fieldset>
-                <legend>Address</legend>
-                <div class="form-group">
-                    <label for="id_address_line_1">Street Number and Name <span class="required">*</span></label>
-                    <input type="text" id="id_address_line_1" name="address_line_1" required {% if form.address_line_1.value %} value="{{ form.address_line_1.value }}"{% endif %}>
-                    {% if form.address_line_1.errors %}
-                        <div class="error">{{ form.address_line_1.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="id_address_line_2">Street Address (Apt/Unit)</label>
-                    <input type="text" id="id_address_line_2" name="address_line_2" {% if form.address_line_2.value %} value="{{ form.address_line_2.value }}"{% endif %}>
-                    {% if form.address_line_2.errors %}
-                        <div class="error">{{ form.address_line_2.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="id_city">City <span class="required">*</span></label>
-                    <input type="text" id="id_city" name="city" required {% if form.city.value %} value="{{ form.city.value }}"{% endif %}>
-                    {% if form.city.errors %}
-                        <div class="error">{{ form.city.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="id_state">State/Province <span class="required">*</span></label>
-                    <select id="id_state" name="state" required>
-                        <option value="" {% if not form.state.value %}selected{% endif %}>Select a state</option>
-                        <option value="AL" {% if form.state.value == 'AL' %}selected{% endif %}>Alabama</option>
-                        <option value="AK" {% if form.state.value == 'AK' %}selected{% endif %}>Alaska</option>
-                        <option value="AZ" {% if form.state.value == 'AZ' %}selected{% endif %}>Arizona</option>
-                        <option value="AR" {% if form.state.value == 'AR' %}selected{% endif %}>Arkansas</option>
-                        <option value="CA" {% if form.state.value == 'CA' %}selected{% endif %}>California</option>
-                        <option value="CO" {% if form.state.value == 'CO' %}selected{% endif %}>Colorado</option>
-                        <option value="CT" {% if form.state.value == 'CT' %}selected{% endif %}>Connecticut</option>
-                        <option value="DE" {% if form.state.value == 'DE' %}selected{% endif %}>Delaware</option>
-                        <option value="FL" {% if form.state.value == 'FL' %}selected{% endif %}>Florida</option>
-                        <option value="GA" {% if form.state.value == 'GA' %}selected{% endif %}>Georgia</option>
-                        <option value="HI" {% if form.state.value == 'HI' %}selected{% endif %}>Hawaii</option>
-                        <option value="ID" {% if form.state.value == 'ID' %}selected{% endif %}>Idaho</option>
-                        <option value="IL" {% if form.state.value == 'IL' %}selected{% endif %}>Illinois</option>
-                        <option value="IN" {% if form.state.value == 'IN' %}selected{% endif %}>Indiana</option>
-                        <option value="IA" {% if form.state.value == 'IA' %}selected{% endif %}>Iowa</option>
-                        <option value="KS" {% if form.state.value == 'KS' %}selected{% endif %}>Kansas</option>
-                        <option value="KY" {% if form.state.value == 'KY' %}selected{% endif %}>Kentucky</option>
-                        <option value="LA" {% if form.state.value == 'LA' %}selected{% endif %}>Louisiana</option>
-                        <option value="ME" {% if form.state.value == 'ME' %}selected{% endif %}>Maine</option>
-                        <option value="MD" {% if form.state.value == 'MD' %}selected{% endif %}>Maryland</option>
-                        <option value="MA" {% if form.state.value == 'MA' %}selected{% endif %}>Massachusetts</option>
-                        <option value="MI" {% if form.state.value == 'MI' %}selected{% endif %}>Michigan</option>
-                        <option value="MN" {% if form.state.value == 'MN' %}selected{% endif %}>Minnesota</option>
-                        <option value="MS" {% if form.state.value == 'MS' %}selected{% endif %}>Mississippi</option>
-                        <option value="MO" {% if form.state.value == 'MO' %}selected{% endif %}>Missouri</option>
-                        <option value="MT" {% if form.state.value == 'MT' %}selected{% endif %}>Montana</option>
-                        <option value="NE" {% if form.state.value == 'NE' %}selected{% endif %}>Nebraska</option>
-                        <option value="NV" {% if form.state.value == 'NV' %}selected{% endif %}>Nevada</option>
-                        <option value="NH" {% if form.state.value == 'NH' %}selected{% endif %}>New Hampshire</option>
-                        <option value="NJ" {% if form.state.value == 'NJ' %}selected{% endif %}>New Jersey</option>
-                        <option value="NM" {% if form.state.value == 'NM' %}selected{% endif %}>New Mexico</option>
-                        <option value="NY" {% if form.state.value == 'NY' %}selected{% endif %}>New York</option>
-                        <option value="NC" {% if form.state.value == 'NC' %}selected{% endif %}>North Carolina</option>
-                        <option value="ND" {% if form.state.value == 'ND' %}selected{% endif %}>North Dakota</option>
-                        <option value="OH" {% if form.state.value == 'OH' %}selected{% endif %}>Ohio</option>
-                        <option value="OK" {% if form.state.value == 'OK' %}selected{% endif %}>Oklahoma</option>
-                        <option value="OR" {% if form.state.value == 'OR' %}selected{% endif %}>Oregon</option>
-                        <option value="PA" {% if form.state.value == 'PA' %}selected{% endif %}>Pennsylvania</option>
-                        <option value="RI" {% if form.state.value == 'RI' %}selected{% endif %}>Rhode Island</option>
-                        <option value="SC" {% if form.state.value == 'SC' %}selected{% endif %}>South Carolina</option>
-                        <option value="SD" {% if form.state.value == 'SD' %}selected{% endif %}>South Dakota</option>
-                        <option value="TN" {% if form.state.value == 'TN' %}selected{% endif %}>Tennessee</option>
-                        <option value="TX" {% if form.state.value == 'TX' %}selected{% endif %}>Texas</option>
-                        <option value="UT" {% if form.state.value == 'UT' %}selected{% endif %}>Utah</option>
-                        <option value="VT" {% if form.state.value == 'VT' %}selected{% endif %}>Vermont</option>
-                        <option value="VA" {% if form.state.value == 'VA' %}selected{% endif %}>Virginia</option>
-                        <option value="WA" {% if form.state.value == 'WA' %}selected{% endif %}>Washington</option>
-                        <option value="WV" {% if form.state.value == 'WV' %}selected{% endif %}>West Virginia</option>
-                        <option value="WI" {% if form.state.value == 'WI' %}selected{% endif %}>Wisconsin</option>
-                        <option value="WY" {% if form.state.value == 'WY' %}selected{% endif %}>Wyoming</option>
+                <div class="form-section" id="address-info">
+                    <h3>Address</h3>
+                    <label for="street-name">Street Number and Name *</label>
+                    <input type="text" id="street-name" name="address_line_1" required>
+                    
+                    <label for="street-address">Street Address (Apt/Unit)</label>
+                    <input type="text" id="street-address" name="address_line_2">
+                    
+                    <select id="country" name="country" required>
+                        <option value="">Select a country</option>
                     </select>
-                    {% if form.state.errors %}
-                        <div class="error">{{ form.state.errors }}</div>
-                    {% endif %}
+                    
+                    <select id="state" name="state" required>
+                        <option value="">Select a state</option>
+                    </select>
+                    
+                    <select id="city" name="city" required>
+                        <option value="">Select a city</option>
+                    </select>
+                    
+                    <label for="postal-code">Postal Code *</label>
+                    <input type="text" id="postal-code" name="postal_code" required>
+                    
+                    <button type="button" class="prev-btn">Previous</button>
+                    <button type="button" class="next-btn">Next</button>
                 </div>
                 
-                <div class="form-group">
-                    <label for="id_postal_code">Postal Code <span class="required">*</span></label>
-                    <input type="text" id="id_postal_code" name="postal_code" required {% if form.postal_code.value %} value="{{ form.postal_code.value }}"{% endif %}>
-                    {% if form.postal_code.errors %}
-                        <div class="error">{{ form.postal_code.errors }}</div>
-                    {% endif %}
-                </div>
-            </fieldset>
-            <fieldset>
-                <legend>Qualifications</legend>
-                <div class="form-group">
-                    <label for="id_degree">Degree <span class="required">*</span></label>
-                    <select id="id_degree" name="degree" required>
+
+                <div class="form-section" id="qualifications-info">
+                    <h3>Qualifications</h3>
+                    <label for="degree">Highest Degree *</label>
+                    <select id="degree" name="degree" required>
                         <option value="">Select an option</option>
-                        <option value="high_school">High School</option>
-                        <option value="associate_degree">Associate Degree</option>
-                        <option value="bachelor_degree">Bachelor’s Degree</option>
-                        <option value="master_degree">Master’s Degree</option>
+                        <option value="high-school">High School</option>
+                        <option value="associate">Associate</option>
+                        <option value="bachelor">Bachelor's</option>
+                        <option value="master">Master's</option>
                     </select>
-                    {% if form.degree.errors %}
-                        <div class="error">{{ form.degree.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="id_institution">Institution <span class="required">*</span></label>
-                    <input type="text" id="id_institution" name="institution" required {% if form.institution.value %} value="{{ form.institution.value }}"{% endif %}>
-                    {% if form.institution.errors %}
-                        <div class="error">{{ form.institution.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="id_year_of_passing">Year of Passing <span class="required">*</span></label>
-                    <input type="Year" id="id_year_of_passing" name="year_of_passing" required {% if form.year_of_passing.value %} value="{{ form.year_of_passing.value }}"{% endif %}>
-                    {% if form.year_of_passing.errors %}
-                        <div class="error">{{ form.year_of_passing.errors }}</div>
-                    {% endif %}
+                    <label for="institution">Institution *</label>
+                    <input type="text" id="institution" name="institution" required>
+                    <label for="year-passing">Year of Passing *</label>
+                    <input type="number" id="year-passing" name="year_of_passing" required>
+                    <label for="additional-certificates">Additional Certificates</label>
+                    <input type="text" id="additional-certificates" name="additional_certificates">
+                    <button type="button" class="prev-btn">Previous</button>
+                    <button type="button" class="next-btn">Next</button>
                 </div>
 
-                <div class="form-group">
-                    <label for="id_additional_certificates">Additional Certificates</label>
-                    <textarea id="id_additional_certificates" name="additional_certificates" rows="4">{% if form.additional_certificates.value %}{{ form.additional_certificates.value }}{% endif %}</textarea>
-                    {% if form.additional_certificates.errors %}
-                        <div class="error">{{ form.additional_certificates.errors }}</div>
-                    {% endif %}
+                <div class="form-section" id="employment-info">
+                    <h3>Employment Information</h3>
+                    <div id="employment-entries-container"></div>
+                    <button type="button" id="add-employment-btn">Add Experience</button>
+                    <button type="button" class="prev-btn">Previous</button>
+                    <button type="button" class="next-btn">Next</button>
                 </div>
-            </fieldset>    
-            <!-- Employment Information -->
-            <fieldset>
-                <legend>Employment Information</legend>
-                <div class="form-group">
-                    <label for="id_current_company_name">Current Company Name</label>
-                    <input type="text" id="id_current_company_name" name="current_company_name" {% if form.current_company_name.value %} value="{{ form.current_company_name.value }}"{% endif %}>
-                    {% if form.current_company_name.errors %}
-                        <div class="error">{{ form.current_company_name.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="id_current_job_title">Current Job Title</label>
-                    <input type="text" id="id_current_job_title" name="current_job_title" {% if form.current_job_title.value %} value="{{ form.current_job_title.value }}"{% endif %}>
-                    {% if form.current_job_title.errors %}
-                        <div class="error">{{ form.current_job_title.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="id_current_start_date">Start Date</label>
-                    <input type="date" id="id_current_start_date" name="current_start_date" {% if form.current_start_date.value %} value="{{ form.current_start_date.value }}"{% endif %}>
-                    {% if form.current_start_date.errors %}
-                        <div class="error">{{ form.current_start_date.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="id_current_end_date">End Date (if applicable)</label>
-                    <input type="date" id="id_current_end_date" name="current_end_date" {% if form.current_end_date.value %} value="{{ form.current_end_date.value }}"{% endif %}>
-                    {% if form.current_end_date.errors %}
-                        <div class="error">{{ form.current_end_date.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="id_current_job_description">Job Description</label>
-                    <textarea id="id_current_job_description" name="current_job_description" rows="4">{% if form.current_job_description.value %}{{ form.current_job_description.value }}{% endif %}</textarea>
-                    {% if form.current_job_description.errors %}
-                        <div class="error">{{ form.current_job_description.errors }}</div>
-                    {% endif %}
-                </div>
-                <button type="button" id="add-employment-btn">Add Previous Employment</button>
-                <div id="employment-history" class="employment-history">
-                    <!-- Previous employment sections will be appended here -->
-                </div>
-            </fieldset>
 
-            <!-- Visa Information -->
-            <fieldset>
-                <legend>Visa Information</legend>
-                <div class="form-group">
-                    <label for="id_visa_status">Visa Status</label>
-                    <select id="id_visa_status" name="visa_status">
-                        <option value="">Select an option</option>
-                        <option value="F1">F1</option>
-                        <option value="H1B">H1B</option>
-                        <option value="L1">L1</option>
-                        <option value="Other">Other</option>
+                <div class="form-section" id="visa-info">
+                    <h3>Visa Information</h3>
+                    <label for="visa-status">Visa Status *</label>
+                    <select id="visa-status" name="visa_status" required>
+                        <option value="" disabled selected>Select a visa</option>
+                        <option value="citizen">U.S. Citizen</option>
+                        <option value="B1/B2">B1/B2 - Visitor Visa</option>
+                        <option value="F1">F1 - Student Visa</option>
+                        <option value="H1B">H1B - Specialty Occupation Visa</option>
+                        <option value="L1">L1 - Intracompany Transferee Visa</option>
+                        <option value="O1">O1 - Extraordinary Ability Visa</option>
+                        <option value="J1">J1 - Exchange Visitor Visa</option>
+                        <option value="E2">E2 - Investor Visa</option>
+                        <option value="TN">TN - NAFTA Professional Visa</option>
+                        <option value="K1">K1 - Fiancé(e) Visa</option>
+                        <option value="R1">R1 - Religious Worker Visa</option>
                     </select>
-                    {% if form.visa_status.errors %}
-                        <div class="error">{{ form.visa_status.errors }}</div>
-                    {% endif %}
+                    <div id="visa-fields">
+                        <label for="visa-issue-date">Visa Issue Date *</label>
+                        <input type="date" id="visa-issue-date" name="visa_issue_date" required>
+                        <label for="visa-expiry-date">Visa Expiry Date *</label>
+                        <input type="date" id="visa-expiry-date" name="visa_expiry_date" required>
+                    </div>
+                    <button type="button" class="prev-btn">Previous</button>
+                    <button type="submit">Submit</button>
                 </div>
-                <div class="form-group">
-                    <label for="id_visa_number">Visa Issue Date</label>
-                    <input type="date" id="id_visa_issue_date" name="id_visa_issue_date" {% if form.visa_number.value %} value="{{ form.visa_number.value }}"{% endif %}>
-                    {% if form.visa_issue_date.errors %}
-                        <div class="error">{{ form.visa_issue_date.errors }}</div>
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    <label for="id_visa_expiry_date">Visa Expiry Date</label>
-                    <input type="date" id="id_visa_expiry_date" name="visa_expiry_date" {% if form.visa_expiry_date.value %} value="{{ form.visa_expiry_date.value }}"{% endif %}>
-                    {% if form.visa_expiry_date.errors %}
-                        <div class="error">{{ form.visa_expiry_date.errors }}</div>
-                    {% endif %}
-                </div>
- 
-            </fieldset>
-
-            <!-- Submit Button -->
-            <div class="form-group">
-                <button type="submit">Submit</button>
-            </div>
-            
             </form>
-            
-
-    <template id="employment-template">
-        <div class="employment-entry">
-            <fieldset>
-                <legend>Previous Employment</legend>
-                <div class="form-group">
-                    <label for="id_prev_company_name">Company Name</label>
-                    <input type="text" name="prev_company_name" class="prev_company_name">
-                </div>
-                <div class="form-group">
-                    <label for="id_prev_job_title">Job Title</label>
-                    <input type="text" name="prev_job_title" class="prev_job_title">
-                </div>
-                <div class="form-group">
-                    <label for="id_prev_start_date">Start Date</label>
-                    <input type="date" name="prev_start_date" class="prev_start_date">
-                </div>
-                <div class="form-group">
-                    <label for="id_prev_end_date">End Date</label>
-                    <input type="date" name="prev_end_date" class="prev_end_date">
-                </div>
-                <div class="form-group">
-                    <label for="id_prev_job_description">Job Description</label>
-                    <textarea name="prev_job_description" class="prev_job_description" rows="4"></textarea>
-                </div>
-                <button type="button" class="delete-employment-btn">Delete</button>
-            </fieldset>
         </div>
-    </template>
+    </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            let employmentCounter = 0;
-            const employmentHistoryDiv = document.getElementById('employment-history');
-            const employmentTemplate = document.getElementById('employment-template').content;
-
-            function addEmploymentSection() {
-                employmentCounter++;
-                const newEmploymentSection = document.importNode(employmentTemplate, true);
-
-                // Update element IDs and names
-                const inputs = newEmploymentSection.querySelectorAll('input, textarea');
-                inputs.forEach((input) => {
-                    const nameAttr = input.getAttribute('name');
-                    if (nameAttr) {
-                        input.setAttribute('name', nameAttr.replace('prev_', `prev_${employmentCounter}_`));
+        const nextButtons = document.querySelectorAll('.next-btn');
+        const prevButtons = document.querySelectorAll('.prev-btn');
+        const progressItems = document.querySelectorAll('#progress-list li');
+        const employmentEntriesContainer = document.getElementById('employment-entries-container');
+        const visaStatusSelect = document.getElementById('visa-status');
+        const visaFields = document.getElementById('visa-fields');
+        const form = document.getElementById('registration-form'); 
+        const universalApiKey = 'nsijzLEwA6NbX6PV7jFbqH7PofHwXGvanfp2RobPulnYP7sKF0Co6AgyJGY1YgWnSK8';
+        const userEmail = 'mohdzaid8485@gmail.com'; // Your email
+        let authToken = '';
+        
+        // Function to prefill user data
+        function prefillUserData() {
+            const firstName = document.getElementById('modal-first-name').value; // Adjust based on modal input IDs
+            const lastName = document.getElementById('modal-last-name').value;
+            const email = document.getElementById('modal-email').value;
+        
+            document.getElementById('first-name').value = firstName;
+            document.getElementById('last-name').value = lastName;
+            document.getElementById('email').value = email;
+        }
+        
+        // Handle next button clicks                                  
+        nextButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const currentSection = button.closest('.form-section');
+                if (validateSection(currentSection)) {
+                    const nextSection = currentSection.nextElementSibling;
+                    if (nextSection) {
+                        currentSection.classList.remove('active');
+                        nextSection.classList.add('active');
+                        updateProgress();
                     }
-                    const idAttr = input.getAttribute('id');
-                    if (idAttr) {
-                        input.setAttribute('id', idAttr.replace('id_prev_', `id_prev_${employmentCounter}_`));
-                    }
-                });
-
-                // Append to employment history
-                employmentHistoryDiv.appendChild(newEmploymentSection);
-                
-                // Attach delete functionality
-                const deleteButton = newEmploymentSection.querySelector('.delete-employment-btn');
-                deleteButton.addEventListener('click', function () {
-                    employmentHistoryDiv.removeChild(newEmploymentSection);
-                });   
-            }
-
-            // Event listener for the Add Previous Employment button
-            document.getElementById('add-employment-btn').addEventListener('click', addEmploymentSection);
+                }
+            });
         });
+        
+        // Handle previous button clicks
+        prevButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const currentSection = button.closest('.form-section');
+                const prevSection = currentSection.previousElementSibling;
+                if (prevSection) {
+                    currentSection.classList.remove('active');
+                    prevSection.classList.add('active');
+                    updateProgress();
+                }
+            });
+        });
+        
+        // Allow clicking progress items to navigate sections
+        progressItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const targetSectionId = item.dataset.section;
+                const targetSection = document.getElementById(targetSectionId);
+                if (targetSection && validateSection(document.querySelector('.form-section.active'))) {
+                    document.querySelector('.form-section.active').classList.remove('active');
+                    targetSection.classList.add('active');
+                    updateProgress();
+                }
+            });
+        });
+    
+        // Validate required fields in the current section
+        function validateSection(section) {
+            const requiredInputs = section.querySelectorAll('[required]');
+            let isValid = true;
+        
+            requiredInputs.forEach(input => {
+                if (!input.value) {
+                    isValid = false;
+                    input.classList.add('error'); 
+                } else {
+                    input.classList.remove('error');
+                }
+            });
+        
+            if (!isValid) {
+                alert('Please fill in all required fields marked with *');
+            }
+        
+            return isValid;
+        }
+        
+        // Update progress indicators
+        function updateProgress() {
+            const activeSection = document.querySelector('.form-section.active');
+            const activeIndex = Array.from(progressItems).findIndex(item => item.dataset.section === activeSection.id);
+            
+            progressItems.forEach((item, index) => {
+                item.classList.remove('active');
+                if (index <= activeIndex) {
+                    item.classList.add('active');
+                }
+            });
+        }
+        
+        // Add new employment entry
+        let employmentEntryCount = 0; 
+        
+        document.getElementById('add-employment-btn').addEventListener('click', () => {
+            const employmentEntry = document.createElement('div');
+            employmentEntry.classList.add('employment-info');
+            employmentEntry.innerHTML = `
+                <h4>Employment Entry</h4>
+                <label for="company-name-${employmentEntryCount}">Company Name *</label>
+                <input type="text" name="employment_${employmentEntryCount}_company_name" id="company-name-${employmentEntryCount}" required>
+                <label for="job-title-${employmentEntryCount}">Job Title *</label>
+                <input type="text" name="employment_${employmentEntryCount}_job_title" id="job-title-${employmentEntryCount}" required>
+                <label for="start-date-${employmentEntryCount}">Start Date *</label>
+                <input type="date" name="employment_${employmentEntryCount}_start_date" id="start-date-${employmentEntryCount}" required>
+                <label for="end-date-${employmentEntryCount}">End Date *</label>
+                <input type="date" name="employment_${employmentEntryCount}_end_date" id="end-date-${employmentEntryCount}">
+                <label for="job-description-${employmentEntryCount}">Job Description *</label>
+                <input type="text" name="employment_${employmentEntryCount}_job_description" id="job-description-${employmentEntryCount}" required>
+                <div class="checkbox-group">
+                    <label for="currently-working-${employmentEntryCount}">Currently Working?</label>
+                    <input type="checkbox" name="employment_${employmentEntryCount}_currently_working" id="currently-working-${employmentEntryCount}">
+                </div>
+                <button type="button" class="delete-btn">Delete</button>
+            `;
+            employmentEntriesContainer.appendChild(employmentEntry);
+        
+            // Add delete button functionality
+            employmentEntry.querySelector('.delete-btn').addEventListener('click', () => {
+                employmentEntriesContainer.removeChild(employmentEntry);
+            });
+        
+            employmentEntryCount++;
+        });
+        
+        function fetchAuthToken() {
+            return fetch('https://www.universal-tutorial.com/api/getaccesstoken', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'api-token': universalApiKey, // Corrected variable name
+                    'user-email': userEmail
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch auth token: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                authToken = data.auth_token; // Store the auth token
+                fetchCountries(); // Fetch countries after getting the token
+            })
+            .catch(error => {
+                console.error('Error fetching auth token:', error);
+            });
+        }
+        
+        // Fetch countries from Universal Tutorial API
+        function fetchCountries() {
+            fetch('https://www.universal-tutorial.com/api/countries/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch countries: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const countrySelect = document.getElementById('country');
+                countrySelect.innerHTML = '<option value="">Select a country</option>'; // Clear previous options
+                data.forEach(country => {
+                    const option = document.createElement('option');
+                    option.value = country.country_name;
+                    option.textContent = country.country_name;
+                    countrySelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching countries:', error);
+            });
+        }
+        
+        // Fetch states based on selected country
+        function fetchStates(countryName) {
+            fetch(`https://www.universal-tutorial.com/api/states/${countryName}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch states: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                populateStateDropdown(data);
+            })
+            .catch(error => {
+                console.error('Error fetching states:', error);
+            });
+        }
+        
+        // Fetch cities based on selected state
+        function fetchCities(stateName) {
+            fetch(`https://www.universal-tutorial.com/api/cities/${stateName}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch cities: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                populateCityDropdown(data);
+            })
+            .catch(error => {
+                console.error('Error fetching cities:', error);
+            });
+        }
+        
+        // Populate the state dropdown with fetched states
+        function populateStateDropdown(states) {
+            const stateSelect = document.getElementById('state');
+            stateSelect.innerHTML = '<option value="">Select a state</option>'; // Clear previous options
+        
+            states.forEach(state => {
+                const option = document.createElement('option');
+                option.value = state.state_name;
+                option.textContent = state.state_name;
+                stateSelect.appendChild(option);
+            });
+        }
+        
+        // Populate the city dropdown with fetched cities
+        function populateCityDropdown(cities) {
+            const citySelect = document.getElementById('city');
+            citySelect.innerHTML = '<option value="">Select a city</option>'; // Clear previous options
+        
+            cities.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city.city_name;
+                option.textContent = city.city_name;
+                citySelect.appendChild(option);
+            });
+        }
+        
+        // Handle country selection
+        document.getElementById('country').addEventListener('change', function() {
+            const selectedCountry = this.value;
+            if (selectedCountry) {
+                fetchStates(selectedCountry);
+            }
+        });
+        
+        // Handle state selection
+        document.getElementById('state').addEventListener('change', function() {
+            const selectedState = this.value;
+            if (selectedState) {
+                fetchCities(selectedState);
+            }
+        });
+        
+        // Event listener for visa status selection
+        visaStatusSelect.addEventListener('change', (event) => {
+            if (event.target.value === 'citizen') {
+                // Hide additional fields
+                visaFields.style.display = 'none'; // Hide visa fields
+                Array.from(visaFields.querySelectorAll('input')).forEach((field) => {
+                    field.required = false; // Make fields optional
+                });
+            } else {
+                // Show visa fields
+                visaFields.style.display = 'block'; // Show visa fields
+                Array.from(visaFields.querySelectorAll('input')).forEach((field) => {
+                    field.required = true; // Make fields required again
+                });
+            }
+        });
+    
+    
+        function saveToLocalStorage() {
+            const emailInput = document.getElementById('email');
+            const firstNameInput = document.getElementById('first-name');
+            const lastNameInput = document.getElementById('last-name');
+        
+            localStorage.setItem('email', emailInput.value);
+            localStorage.setItem('first-name', firstNameInput.value);
+            localStorage.setItem('last-name', lastNameInput.value);
+        }
+        
+        // Prefill form fields from local storage
+        function prefillEmail() {
+            const storedEmail = localStorage.getItem('email');
+            if (storedEmail) {
+                document.getElementById('email').value = storedEmail; 
+            }
+        }
+        
+        function prefillName() {
+            const storedFirstName = localStorage.getItem('first-name');
+            const storedLastName = localStorage.getItem('last-name');
+        
+            if (storedFirstName) {
+                document.getElementById('first-name').value = storedFirstName; 
+            }
+            if (storedLastName) {
+                document.getElementById('last-name').value = storedLastName; 
+            }
+        }
+        
+        // Submit form handler
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+        
+            // Save form data to local storage
+            saveToLocalStorage();
+        
+            // Optional: Validate form fields before submission
+            if (!validateSection(document.querySelector('.form-section.active'))) {
+                return; // Stop submission if validation fails
+            }
+        
+            // Manually trigger form submission
+            form.submit(); // Submit the form
+        });
+    
+        window.onload = () => {
+            prefillEmail();
+            prefillName();
+            fetchAuthToken();
+        }
     </script>
-</body>
-</html>
+</body>    

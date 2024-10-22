@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{%csrf_token%}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,26 +9,29 @@
         /* Base styles */
         body {
             margin: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f9;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
             color: #333;
+            line-height: 1.6;
+            background-image: url('/static/images/bg.jpg');
+        
+            background-repeat: no-repeat;
         }
 
         header {
-            background-color: #00264d;
+            background-color: rgba(0, 38, 77, 0.9);
             color: #fff;
+            padding: 1rem 2rem;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 1rem 2rem; /* Increased space in header */
         }
 
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.75rem 0;
-            max-width: 1200px; /* Adjust width as needed */
+            max-width: 1200px;
             margin: 0 auto;
-            width: 100%;
+            padding: 0.75rem 0;
         }
 
         .navbar-brand {
@@ -39,37 +43,22 @@
             align-items: center;
         }
 
-        .navbar-brand .logo-text {
-            margin-left: 0.5rem;
-            color: #ffcc00;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .navbar-brand .logo-icon {
-            font-size: 2rem;
-            background-color: #ffcc00;
-            color: #00264d;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 2.5rem;
-            height: 2.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            font-weight: bold;
+        .navbar-brand img {
+            height: 90px;
+            width: auto;
         }
 
         .navbar-nav {
             list-style: none;
             display: flex;
+            align-items: center;
             margin: 0;
             padding: 0;
-            align-items: center;
         }
 
         .nav-item {
+            margin-left: 1.5rem;
             position: relative;
-            margin-left: 1.5rem; /* Reduced margin for better alignment */
         }
 
         .nav-link {
@@ -79,18 +68,28 @@
             padding: 0.75rem 1.5rem;
             border-radius: 4px;
             transition: background-color 0.3s, color 0.3s;
-            font-weight: 500;
         }
 
-        .nav-link:hover,
-        .nav-link:focus {
-            background-color: #003366;
-            color: #ffcc00;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        .nav-link:hover {
+            background-color: #ffcc00;
+            color: #00264d;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
 
-        .dropdown {
-            position: relative;
+        .nav-item .register-btn {
+            background-color: transparent; /* Match the background of nav links */
+            color: #fff; /* Match the text color */
+            border: none; /* Remove any default button styling */
+            padding: 0.75rem 1.5rem; /* Same padding as nav links */
+            font-size: 1rem; /* Same font size */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s, color 0.3s; /* Transition for hover effect */
+        }
+
+        .nav-item .register-btn:hover {
+            background-color: #ffcc00; /* Change background color on hover */
+            color: #00264d; /* Change text color on hover */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Add text shadow on hover */
         }
 
         .dropdown-menu {
@@ -99,13 +98,13 @@
             top: 100%;
             left: 0;
             background-color: #003366;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             border-radius: 4px;
             list-style: none;
             padding: 0;
             margin: 0;
             min-width: 180px;
-            z-index: 1000; /* Ensure dropdown is above other elements */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
         }
 
         .dropdown-menu .dropdown-item {
@@ -114,12 +113,11 @@
             text-decoration: none;
             display: block;
             transition: background-color 0.3s;
-            font-weight: 400;
         }
 
         .dropdown-menu .dropdown-item:hover {
-            background-color: #004080;
-            color: #ffcc00;
+            background-color: #ffcc00;
+            color: #00264d;
         }
 
         .dropdown:hover .dropdown-menu {
@@ -134,26 +132,19 @@
             font-size: 1.75rem;
             cursor: pointer;
             padding: 0;
-            margin-left: auto;
         }
 
-        .navbar-toggle:focus {
-            outline: none;
-        }
-
-        /* Responsive Styles */
         @media (max-width: 768px) {
             .navbar-nav {
                 flex-direction: column;
                 display: none;
-                width: 100%;
                 background-color: #00264d;
                 position: absolute;
                 top: 100%;
                 left: 0;
+                width: 100%;
+                padding: 0.5rem 0;
                 border-top: 1px solid #003366;
-                padding: 0;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             }
 
             .navbar-nav.active {
@@ -169,63 +160,218 @@
             .navbar-toggle {
                 display: block;
             }
+        }
 
-            .dropdown-menu {
-                position: static;
-                box-shadow: none;
-                border-radius: 0;
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            transition: transform 0.3s ease;
+            transform: translateY(-50px);
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
             }
-
-            .dropdown:hover .dropdown-menu {
-                display: none; /* Hide dropdown on mobile */
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
+
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            width: 48%; 
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 48%; 
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #ffcc00;
+            outline: none; 
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        button[type="submit"] {
+            background-color: #ffcc00;
+            color: #00264d;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #e6b800; 
+            transform: scale(1.05);
+        }
+
+        small {
+            color: #777;
+            font-size: 0.9rem;
+            display: block;
+            margin-top: 5px; 
+        }
     </style>
+    {% load static %}
 </head>
 <body>
     <header>
         <nav class="navbar">
             <a href="/" class="navbar-brand">
-                <span class="logo-icon">B</span>
-                <span class="logo-text">Binary Academy</span>
+                <img src="{% static 'images/download.jfif' %}" alt="Image" width="500" height="500">
             </a>
             <button class="navbar-toggle">☰</button>
             <ul class="navbar-nav">
                 <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
                 <li class="nav-item dropdown">
-                    <a href="/about" class="nav-link">About Us</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/about/mission" class="dropdown-item">Mission</a></li>
-                        <li><a href="/about/team" class="dropdown-item">Team</a></li>
-                        <li><a href="/about/history" class="dropdown-item">History</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item"><a href="/campus" class="nav-link">Campus</a></li>
-                <li class="nav-item"><a href="/students" class="nav-link">Students</a></li>
-                <li class="nav-item"><a href="/register" class="nav-link">Register</a></li>
-                <li class="nav-item dropdown">
-                    <a href="#" class="nav-link">Login</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/about/mission" class="dropdown-item">Student Login</a></li>
-                        <li><a href="/about/team" class="dropdown-item">Trainer Login</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item"><a href="/contact" class="nav-link">Contact Us</a></li>
-            </ul>
-        </nav>
-    </header>
+                    <li class="nav-item"><button class="nav-link register-btn">Register</button></li>
+                    <li class="nav-item dropdown">
+                        <a href="/login" class="nav-link">Login</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/login" class="dropdown-item">Student</a></li>
+                            <li><a href="/login/staff" class="dropdown-item">Staff</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </header>
 
-    <!-- Content goes here -->
+        <div id="registerModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2>Register</h2>
+                <form id="registerForm" method="post" action="sign_up/">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="first_name">First Name:</label>
+                        <input type="text" id="modal_first_name" name="first_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Last Name:</label>
+                        <input type="text" id="modal_last_name" name="last_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="modal_email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm Password:</label>
+                        <input type="password" id="confirm_password" name="confirm_password" required>
+                    </div>
+                    <button type="submit">Create Account</button>
+                    <small>By registering, you agree to our <a href="/terms" style="color: #ffcc00;">terms and conditions</a>.</small>
+                </form>
+            </div>
+        </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const navToggle = document.querySelector('.navbar-toggle');
-            const navItems = document.querySelector('.navbar-nav');
-
-            navToggle.addEventListener('click', function () {
-                navItems.classList.toggle('active');
+        <script>
+            
+            document.querySelector('.register-btn').addEventListener('click', function() {
+                document.getElementById('registerModal').style.display = 'block';
+                const existingEmail = localStorage.getItem('email');
+                const existingFirstName = localStorage.getItem('first-name');
+                const existingLastName = localStorage.getItem('last-name');
+                if (existingEmail) {
+                    document.getElementById('modal_email').value = existingEmail;
+                }
+                if (existingFirstName) {
+                    document.getElementById('modal_first_name').value = existingFirstName;
+                }
+                if (existingLastName) {
+                    document.getElementById('modal_last_name').value = existingLastName;
+                }
             });
-        });
-    </script>
+    
+            document.getElementById('registerForm').addEventListener('submit', function(event) {
+              
+                const email = document.getElementById('modal_email').value;
+                localStorage.setItem('email', email);
+    
+             
+                const firstName = document.getElementById('modal_first_name').value;
+                localStorage.setItem('first-name', firstName);
+                const lastName = document.getElementById('modal_last_name').value;
+                localStorage.setItem('last-name', lastName);
+    
+                
+            });
+    
+         
+            function closeModal() {
+                document.getElementById('registerModal').style.display = 'none';
+            }
+    
+            
+            window.onclick = function(event) {
+                if (event.target == document.getElementById('registerModal')) {
+                    closeModal();
+                }
+            };
+    
+            // Toggle navbar visibility
+            document.querySelector('.navbar-toggle').addEventListener('click', function() {
+                const nav = document.querySelector('.navbar-nav');
+                nav.classList.toggle('active');
+            });
+        </script>
+    
 </body>
 </html>

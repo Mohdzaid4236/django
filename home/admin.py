@@ -1,27 +1,22 @@
-# myapp/admin.py
 from django.contrib import admin
-from .models import PersonalInformation, Address, EmploymentHistory, VisaInformation,Qualification
+from .models import PersonalInformation, Address, Qualification, EmploymentHistory, VisaInformation
 
-class AddressInline(admin.StackedInline):
-    model = Address
-
-class VisaInformationInline(admin.StackedInline):
-    model = VisaInformation
-
-class EmploymentHistoryInline(admin.TabularInline):
-    model = EmploymentHistory
-
-class QualificationInline(admin.TabularInline):
-    model = Qualification
-    
-
+@admin.register(PersonalInformation)
 class PersonalInformationAdmin(admin.ModelAdmin):
-    inlines = [AddressInline, VisaInformationInline, EmploymentHistoryInline,QualificationInline]
+    list_display = ('first_name', 'last_name', 'email', 'phone')
 
+@admin.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ('personal_info', 'city', 'state', 'postal_code', 'country')
 
+@admin.register(Qualification)
+class QualificationAdmin(admin.ModelAdmin):
+    list_display = ('personal_info', 'degree', 'institution', 'year_of_passing')
 
-admin.site.register(PersonalInformation, PersonalInformationAdmin)
-admin.site.register(Address)
-admin.site.register(EmploymentHistory)
-admin.site.register(VisaInformation)
-admin.site.register(Qualification)
+@admin.register(EmploymentHistory)
+class EmploymentHistoryAdmin(admin.ModelAdmin):
+    list_display = ('personal_info', 'company_name', 'job_title', 'start_date', 'end_date')
+
+@admin.register(VisaInformation)
+class VisaInformationAdmin(admin.ModelAdmin):
+    list_display = ('personal_info', 'visa_status', 'visa_issue_date', 'visa_expiry_date')

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+{%load static%}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Successful</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> 
+</head>
+<body>
+    <div class="container">
+        <h1>Registration Successful</h1>
+        <p>Dear {{ personal_info.first_name }},</p>
+        <p>Thank you for registering with us! Your registration has been completed successfully.</p>
+        
+        <p>We appreciate your interest and will review your information shortly. You will receive an email confirmation with further instructions.</p>
+        
+        <h2>Next Steps:</h2>
+        <ul>
+        <li>Check your email for confirmation and further instructions.</li>
+        <li>If you have any questions, feel free to contact our support team.</li>
+        <li>We look forward to having you on board!</li>
+        </ul>
+        
+        <a href="{% url 'index' %}">Go to Home</a> 
+    </div>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a:hover {
+            background: #45a049;
+        }
+    </style>
+</body>
+</html>

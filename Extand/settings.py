@@ -26,8 +26,12 @@ SECRET_KEY = 'django-insecure-h04vd!&^k%$f9thi+c)2&@x&u%w*_#7z#n_vuz!4szus0=g-f@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = [
+    'http://1266-103-194-89-190.ngrok-free.app',
+    'https://1266-103-194-89-190.ngrok-free.app',
+]
 
 # Application definition
 
@@ -53,6 +57,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Extand.urls'
 
+SITE_URL = 'http://127.0.0.1:8000'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -77,10 +83,18 @@ WSGI_APPLICATION = 'Extand.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'extand',
+        'USER': 'root',
+        'PASSWORD': 'Ext@nd4236',
+        'HOST': '127.0.0.1',  # or your database host
+        'PORT': '3030',       # default MySQL port
     }
 }
+# settings.py
+LOGIN_REDIRECT_URL = 'registration_form'  # Redirect to the registration form after login
+LOGOUT_REDIRECT_URL = 'home'  # Redirect to home after logout (adjust as needed)
+
 
 
 # Password validation
